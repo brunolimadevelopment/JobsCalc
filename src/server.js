@@ -3,8 +3,12 @@
 const express = require("express"); // server
 const server  = express();
 const routes  = require("./routes"); // src/routes.js
+const path    = require("path");
 
 server.set('view engine', 'ejs'); // setando no servidor uma config pra usar uma template engine.
+
+// Mudar a localização da pasta views
+server.set('views', path.join(__dirname, 'views'))
 
 
 // habilitar arquivos statics
