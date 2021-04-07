@@ -25,8 +25,10 @@ module.exports = {
   },
 
   delete(id) {
-    
     data = data.filter(job => Number(job.id) !== Number(id)) // filtra os IDs dos jobs, se for diferente do ID clicado remove do objeto
+  },
 
+  create(newJob) {
+    data.push(newJob)
   }
 }
