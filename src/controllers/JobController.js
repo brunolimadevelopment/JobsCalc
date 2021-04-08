@@ -8,12 +8,9 @@ module.exports = {
         return res.render("job")
     },
 
-    save(req, res) {
-        const jobs   = Job.get()
-        const lastId = jobs[jobs.length - 1]?.id || 0;
+    async save(req, res) {
 
-        Job.create({
-            id: lastId + 1,
+        await Job.create({
             name: req.body.name,
             "daily-hours": req.body["daily-hours"],
             "total-hours": req.body["total-hours"],
@@ -23,58 +20,42 @@ module.exports = {
         return res.redirect('/')
     },
 
-    show(req, res) {
+    async show(req, res) {
         
         const jobId = req.params.id // ID do job parametro na url
-        const jobs  = Job.get()
+        const jobs  = await Job.get()
         const job   = jobs.find(job => Number(job.id) === Number(jobId)) // pra cada um job {} objeto faz uma verificação pelo ID do job
         
         if(!job) {
             return res.send('Job not found!')
         }
         
-        const profile = Profile.get()
+        const profile = await Profile.get()
         job.budget    = JobUtils.calculateBudget(job, profile["value-hour"])
 
         return res.render("job-edit", { job })
     },
 
-    update(req, res) {
+    async update(req, res) {
 
         const jobId = req.params.id
-        const jobs  = Job.get()
-        const job   = jobs.find(job => Number(job.id) === Number(jobId)) // pra cada objeto job {}
-
-        if(!job) {
-            return res.send('Job not found!')
-        }
 
         const updatedJob = {
-            ...job, // spred - desestruturando o objeto job
             name: req.body.name, // atualiza o valor de name
             "total-hours": req.body["total-hours"], // atualiza o valor de total hours
             "daily-hours": req.body["daily-hours"], // atualiza o valor de daily-hours
         }
 
-        const newJobs = jobs.map(job => {
-            
-            if(Number(job.id) === Number(jobId)) {
-                job = updatedJob
-            }
-
-            return job
-        })
-
-        Job.update(newJobs)
+        await Job.update(updatedJob, jobId)
 
         res.redirect('/job/' + jobId)
     },
 
-    delete(req, res) {
+    async delete(req, res) {
 
         const jobId = req.params.id // ID do job a ser excluido        
         
-        Job.delete(jobId)
+        await Job.delete(jobId)
 
         return res.redirect('/')
 
