@@ -17,7 +17,7 @@ module.exports = {
         // 1000 * 60 * 60 = minutos
         // 1000 * 60 * 60 * 24 = horas
         const dayInMs = 1000 * 60 * 60 * 24  // dia em milisegundos
-        const dayDiff = Math.floor(timeDiffInMs / dayInMs) // arredonda pra baixo
+        const dayDiff = Math.ceil(timeDiffInMs / dayInMs) // arredonda o valor
     
         // restam x dias
         return dayDiff
